@@ -55,6 +55,10 @@ compute_first_sets(sdp::Grammar const &grammar)
 						}
 					}
 					nullable &= has_epsilon;
+					if (not has_epsilon)
+					{
+						break;
+					}
 				}
 				if (nullable)
 				{

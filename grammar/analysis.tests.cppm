@@ -39,6 +39,13 @@ TEST_CASE("FIRST and FOLLOW sets")
 		ASSERT(first_sets.at("A"_fw) == std::set{"b"_fw});
 		ASSERT(first_sets.at("B"_fw) == std::set{"b"_fw});
 		ASSERT(first_sets.at("C"_fw) == std::set{"c"_fw});
+
+		auto const follow_set = sdp::compute_follow_sets(grammar, first_sets);
+
+		ASSERT(follow_set.size() == 3);
+		ASSERT(follow_set.at("A"_fw) == std::set{"$"_fw});
+		ASSERT(follow_set.at("B"_fw) == std::set{"c"_fw});
+		ASSERT(follow_set.at("C"_fw) == std::set{"$"_fw});
 	}
 
 	SECTION("Test 2")
@@ -61,7 +68,5 @@ TEST_CASE("FIRST and FOLLOW sets")
 		ASSERT(first_sets.at("B"_fw) == std::set{"b"_fw});
 		ASSERT(first_sets.at("C"_fw) == std::set{"epsilon"_fw});
 		ASSERT(first_sets.at("D"_fw) == (std::set{"d"_fw, "epsilon"_fw}));
-
-		auto const follow_set = sdp::compute_follow_sets(grammar, first_sets);
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "boost-flyweight",
+    "catch2",
+    "magic-enum",
+    "mio",
+    "libassert"
+  ]
+}

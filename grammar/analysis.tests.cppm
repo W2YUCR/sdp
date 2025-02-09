@@ -7,11 +7,16 @@
 import sdp.grammar;
 import sdp.grammar.analysis;
 
-static boost::flyweight<std::string>
+namespace
+{
+
+boost::flyweight<std::string>
 operator""_fw(const char *str, std::size_t len)
 {
 	return boost::flyweight<std::string>{str, len};
 }
+
+} // namespace
 
 TEST_CASE("FIRST and FOLLOW sets")
 {

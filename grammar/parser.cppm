@@ -21,7 +21,7 @@ export class ParseException : public std::exception
 {
   public:
 	[[nodiscard]] const char *
-	what() const override
+	what() const noexcept override
 	{
 		return "Unknown parse exception";
 	}
@@ -34,7 +34,7 @@ export class UnexpectedTokenError : public ParseException
 	UnexpectedTokenError(Token const &token) { message = std::format("Unexpected token {}", token); }
 
 	[[nodiscard]] const char *
-	what() const override
+	what() const noexcept override
 	{
 		return message.c_str();
 	}

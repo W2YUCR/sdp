@@ -51,11 +51,12 @@ class Parser
 	Grammar
 	parse()
 	{
-		Grammar grammar;
-
 		auto [var, productions] = parse_rule();
-		grammar.start = var;
-		grammar.rules.emplace(var, productions);
+
+		Grammar grammar{
+			.rules = {{var, productions}},
+			.start = var,
+		};
 
 		while (_iter != _sentinel)
 		{
@@ -66,14 +67,14 @@ class Parser
 	}
 
   private:
-	std::pair<boost::flyweight<std::string>, std::vector<std::vector<boost::flyweight<std::string>>>>
+	std::pair<Symbol, std::vector<std::vector<Symbol>>>
 	parse_rule()
 	{
 		auto value = *eat(TokenType::Symbol);
 
 		eat(TokenType::Define);
 
-		std::vector<std::vector<boost::flyweight<std::string>>> productions;
+		std::vector<std::vector<Symbol>> productions;
 		productions.push_back(parse_sequence());
 		while (check(TokenType::Alternate))
 		{
@@ -85,10 +86,10 @@ class Parser
 		return {value, productions};
 	}
 
-	std::vector<boost::flyweight<std::string>>
+	std::vector<Symbol>
 	parse_sequence()
 	{
-		std::vector<boost::flyweight<std::string>> sequence;
+		std::vector<Symbol> sequence;
 		while (check(TokenType::Symbol))
 		{
 			auto &symbol = *(*_iter).symbol;
@@ -98,7 +99,7 @@ class Parser
 		return sequence;
 	}
 
-	std::optional<boost::flyweight<std::string>>
+	std::optional<Symbol>
 	eat(TokenType type)
 	{
 		if (not check(type))

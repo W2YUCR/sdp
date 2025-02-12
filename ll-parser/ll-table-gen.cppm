@@ -30,20 +30,20 @@ main(int argc, char const *argv[])
 
 		for (auto const &[var, firsts] : first_sets)
 		{
-			std::print("FIRST({}) =", var.get());
+			std::print("FIRST({}) =", var.name());
 			for (auto const &first : firsts)
 			{
-				std::print(" {}", first.get());
+				std::print(" {}", first.name());
 			}
 			std::println();
 		}
 
 		for (auto const &[var, follow] : follow_sets)
 		{
-			std::print("FOLLOW({}) =", var.get());
+			std::print("FOLLOW({}) =", var.name());
 			for (auto const &first : follow)
 			{
-				std::print(" {}", first.get());
+				std::print(" {}", first.name());
 			}
 			std::println();
 		}

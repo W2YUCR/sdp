@@ -10,10 +10,10 @@ export module sdp.grammar.analysis;
 
 import sdp.grammar;
 
-using symbol_sets = std::map<boost::flyweight<std::string>, std::set<boost::flyweight<std::string>>>;
-
 export namespace sdp
 {
+
+using symbol_sets = std::map<Symbol, std::set<Symbol>, std::less<>>;
 
 symbol_sets
 compute_first_sets(sdp::Grammar const &grammar)
@@ -44,7 +44,7 @@ compute_first_sets(sdp::Grammar const &grammar)
 					bool has_epsilon = false;
 					for (auto const &first : first_sets[symbol])
 					{
-						if (first == "epsilon")
+						if (first.name() == "epsilon")
 						{
 							has_epsilon = true;
 						}
@@ -119,7 +119,7 @@ compute_follow_sets(sdp::Grammar const &grammar, symbol_sets const &first_set)
 
 						for (auto const &first : first_set.at(next))
 						{
-							if (first == "epsilon")
+							if (first.name() == "epsilon")
 							{
 								nullable = true;
 							}

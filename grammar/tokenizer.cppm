@@ -10,6 +10,8 @@ module;
 
 export module sdp.grammar.tokenizer;
 
+import sdp.grammar;
+
 export namespace sdp
 {
 
@@ -24,7 +26,7 @@ enum class TokenType : std::uint8_t
 struct Token
 {
 	TokenType type;
-	std::optional<boost::flyweight<std::string>> symbol;
+	std::optional<Symbol> symbol;
 };
 
 class TokenizationError : public std::exception
@@ -62,20 +64,20 @@ class Tokenizer
 	{
 		while (_iter != _end)
 		{
-			if (std::isspace(*_iter))
+			if (std::isspace(*_iter) != 0)
 			{
 				++_iter;
 				continue;
 			}
 
-			if (std::isalnum(*_iter))
+			if (std::isalnum(*_iter) != 0)
 			{
 				char const *start = _iter;
 				while (_iter != _end and std::isalnum(*_iter))
 				{
 					++_iter;
 				}
-				_current = {.type = TokenType::Symbol, .symbol = boost::flyweight<std::string>{start, _iter}};
+				_current = {.type = TokenType::Symbol, .symbol = Symbol{{start, _iter}}};
 				return *this;
 			}
 			if (*_iter == '|')
@@ -121,7 +123,7 @@ struct std::formatter<sdp::Token> : std::formatter<std::string_view>
 	format(sdp::Token const &token, FmtContext &ctx) const
 	{
 		return token.symbol
-			? std::format_to(ctx.out(), "{}({})", token.type, token.symbol.value().get())
+			? std::format_to(ctx.out(), "{}({})", token.type, token.symbol.value().name())
 			: std::format_to(ctx.out(), "{}", token.type);
 	}
 };

@@ -31,15 +31,16 @@ export class UnexpectedTokenError : public ParseException
 {
 
   public:
-	UnexpectedTokenError(Token const &token) { message = std::format("Unexpected token {}", token); }
+	UnexpectedTokenError(Token const &token) { _message = std::format("Unexpected token {}", token); }
 
 	[[nodiscard]] const char *
 	what() const noexcept override
 	{
-		return message.c_str();
+		return _message.c_str();
 	}
 
-	std::string message;
+private:
+	std::string _message;
 };
 
 template <std::input_iterator I, std::sentinel_for<I> S>

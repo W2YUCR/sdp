@@ -1,6 +1,7 @@
 module;
 
 #include <print>
+#include <ranges>
 
 #include <mio/mmap.hpp>
 
@@ -10,6 +11,7 @@ import sdp.grammar;
 import sdp.grammar.tokenizer;
 import sdp.grammar.parser;
 import sdp.grammar.analysis;
+import sdp.ll_table;
 
 int
 main(int argc, char const *argv[])
@@ -44,6 +46,39 @@ main(int argc, char const *argv[])
 			for (auto const &first : follow)
 			{
 				std::print(" {}", first.name());
+			}
+			std::println();
+		}
+
+		sdp::LLTable table = sdp::LLTable::parse(grammar, first_sets, follow_sets);
+
+		for (auto const &[idx, production] : table.productions() | std::views::enumerate)
+		{
+			std::print("{}:", idx);
+			for (auto const &symbol : production)
+			{
+				std::print(" {}", symbol.name());
+			}
+			std::println();
+		}
+
+		std::println("Variables");
+		for (auto const &[symbol, idx] : table.var_indices())
+		{
+			std::println("{} = {}", symbol.name(), idx);
+		}
+
+		std::println("Terminals");
+		for (auto const &[symbol, idx] : table.terminal_indices())
+		{
+			std::println("{} = {}", symbol.name(), idx);
+		}
+
+		for (std::size_t row = 0; row < table.rows(); ++row)
+		{
+			for (std::size_t column = 0; column < table.columns(); ++column)
+			{
+				std::print("[{}]", table.entry(row, column));
 			}
 			std::println();
 		}

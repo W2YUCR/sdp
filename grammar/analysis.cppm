@@ -2,6 +2,7 @@ module;
 
 #include <map>
 #include <set>
+#include <span>
 #include <string>
 
 #include <boost/flyweight.hpp>
@@ -14,6 +15,44 @@ export namespace sdp
 {
 
 using symbol_sets = std::map<Symbol, std::set<Symbol>, std::less<>>;
+
+std::set<Symbol>
+compute_first_set(Grammar const &grammar, symbol_sets const &first_sets, std::span<const Symbol> string)
+{
+	std::set<Symbol> result;
+	bool nullable = true;
+	for (auto const &symbol : string)
+	{
+		if (not grammar.rules.contains(symbol))
+		{
+			result.insert(symbol);
+			nullable = false;
+			break;
+		}
+		bool has_epsilon = false;
+		for (auto const &first : first_sets.at(symbol))
+		{
+			if (first.name() == "epsilon")
+			{
+				has_epsilon = true;
+			}
+			else
+			{
+				auto [iter, success] = result.insert(first);
+			}
+		}
+		if (not has_epsilon)
+		{
+			nullable = false;
+			break;
+		}
+	}
+	if (nullable)
+	{
+		result.insert("epsilon");
+	}
+	return result;
+}
 
 symbol_sets
 compute_first_sets(sdp::Grammar const &grammar)
